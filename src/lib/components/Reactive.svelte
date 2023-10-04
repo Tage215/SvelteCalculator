@@ -2,45 +2,45 @@
     import Display from "$lib/components/Display.svelte";
     import Keyboard from "$lib/components/Keyboard.svelte";
 
-    let display = ''; 
-    let arithmetic = []; 
-    let numbers = []; 
+    let display = "";
+    let arithmetic = [];
+    let numbers = [];
     let index = 0;
+    let lastNumber = false;
 
     function click(e) {
-        let btn = e.target.value; 
+        let btn = e.target.value;
 
         if (!isNaN(btn)) {
             addDigit(btn);
-        }
-        else { 
+        } else {
             switch (btn) {
-                case 'comma':
+                case "comma":
                     addComma();
                     break;
 
-                case 'enter':
+                case "enter":
                     calculate();
                     break;
 
-                case 'clear':
+                case "clear":
                     memClear();
                     break;
 
-                case 'add':
-                    setOperator('+');
+                case "add":
+                    setOperator("+");
                     break;
 
-                case 'sub':
-                    setOperator('-');
+                case "sub":
+                    setOperator("-");
                     break;
 
-                case 'mul':
-                    setOperator('*');
+                case "mul":
+                    setOperator("*");
                     break;
 
-                case 'div':
-                    setOperator('/');
+                case "div":
+                    setOperator("/");
             }
         }
     }
@@ -49,24 +49,28 @@
         if (numbers[index] == null) {
             numbers[index] = digit;
             display = digit;
-        }
-        else {
+        } else {
             display += digit;
             numbers[index] += digit;
         }
+        lastNumber = true;
     }
 
     function addComma() {
-        if(numbers[index] != null){
-            display += '.'
-            numbers[index] += '.';
+        if (numbers[index] != null && lastNumber) {
+            display += ".";
+            numbers[index] += ".";
+            lastNumber = false;
         }
     }
 
     function setOperator(operator) {
-        display = '';
-        arithmetic[index] = operator;
-        index++;
+        if(lastNumber){
+            display = "";
+            arithmetic[index] = operator;
+            index++;
+            lastNumber = false;
+        }
     }
 
     function calculate() {
@@ -75,22 +79,24 @@
         for (let i = 0; i < arithmetic.length; i++) {
             number = parseFloat(numbers[i + 1]);
             switch (arithmetic[i]) {
-                case '+':
+                case "+":
                     result += number;
                     break;
 
-                case '-':
+                case "-":
                     result -= number;
                     break;
 
-                case '*':
+                case "*":
                     result *= number;
                     break;
 
-                case '/':
+                case "/":
                     result /= number;
             }
         }
+
+        result = Math.round(result * 10000) / 10000;
 
         numbers = [];
         arithmetic = [];
@@ -100,7 +106,6 @@
             display = result;
             numbers[index] = result;
         }
-
     }
 
     function memClear() {
@@ -111,5 +116,5 @@
     }
 </script>
 
-<Display display = {display}/>
-<Keyboard on:click = {click}/>
+<Display {display} />
+<Keyboard on:click={click} />
