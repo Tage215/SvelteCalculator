@@ -1,8 +1,8 @@
 <script>
     import Display from "$lib/components/Display.svelte";
     import Keyboard from "$lib/components/Keyboard.svelte";
+    import { display } from "$lib/stores/display.js";
 
-    let display = "";
     let arithmetic = [];
     let numbers = [];
     let index = 0;
@@ -48,9 +48,9 @@
     function addDigit(digit) {
         if (numbers[index] == null) {
             numbers[index] = digit;
-            display = digit;
+            $display = digit;
         } else {
-            display += digit;
+            $display += digit;
             numbers[index] += digit;
         }
         lastNumber = true;
@@ -58,15 +58,15 @@
 
     function addComma() {
         if (numbers[index] != null && lastNumber) {
-            display += ".";
+            $display += ".";
             numbers[index] += ".";
             lastNumber = false;
         }
     }
 
     function setOperator(operator) {
-        if(lastNumber){
-            display = "";
+        if (lastNumber) {
+            $display = "";
             arithmetic[index] = operator;
             index++;
             lastNumber = false;
@@ -103,18 +103,18 @@
         index = 0;
 
         if (result != null) {
-            display = result;
+            $display = result;
             numbers[index] = result;
         }
     }
 
     function memClear() {
-        display = null;
+        $display = null;
         arithmetic = [];
         numbers = [];
         index = 0;
     }
 </script>
 
-<Display {display} />
+<Display />
 <Keyboard on:click={click} />

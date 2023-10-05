@@ -1,8 +1,8 @@
 <script>
-    export let display;
+    import { display } from "$lib/stores/display.js";
 </script>
 
-<input type="text" id='display' disabled="disabled" value={display}>
+<input type="text" id="display" disabled="disabled" value={$display} />
 
 <style lang="scss">
     #display {
@@ -14,6 +14,6 @@
         padding: 10px 4px 10px 4px;
         font-family: lcd;
         border: 1px solid limegreen;
-        border-radius:4px;
+        border-radius: 4px;
     }
 </style>
